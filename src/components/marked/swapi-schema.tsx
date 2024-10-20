@@ -31,6 +31,8 @@ const typeDefs = /* GraphQL */ `
   # The mutation type, represents all updates we can make to our data
   type Mutation {
     createReview(episode: Episode, review: ReviewInput!): Review
+    updateHumanName(id: ID!, name: String!): Human
+    deleteStarship(id: ID!): ID
   }
 
   # The episodes in the Star Wars trilogy
@@ -365,6 +367,20 @@ const resolvers = {
   },
   Mutation: {
     createReview: (root, { episode, review }) => review,
+    updateHumanName: (root, { id, name }) => {
+      const human = humanData[id]
+      if (!human) {
+        throw new Error("Human not found")
+      }
+      return { ...human, name }
+    },
+    deleteStarship: (root, { id }) => {
+      const starship = getStarship(id)
+      if (!starship) {
+        throw new Error("Starship not found")
+      }
+      return id
+    },
   },
   Character: {
     __resolveType(data, context, info) {
