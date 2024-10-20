@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/graphql-js",
+      "destination": "https://graphql-js.org",
+      "permanent": true
+    },
+    {
       "source": "/conf/attendee/:path*",
       "destination": "https://graphql-conf-attendee-nextjs.vercel.app/:path*",
       "statusCode": 200
