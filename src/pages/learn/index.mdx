@@ -4,11 +4,11 @@ import { Callout } from "nextra/components"
 
 <p className="learn-subtitle">Learn about GraphQL, how it works, and how to use it</p>
 
-GraphQL is a query language for your API, and a server-side runtime for executing queries using a type system you define for your data. The [GraphQL specification](https://spec.graphql.org/) was open-sourced in 2015 and has since been implemented in a variety of programming languages. GraphQL also isn't tied to any specific database or storage engine and is instead backed by your existing code and data.
+GraphQL is a query language for your API, and a server-side runtime for executing queries using a type system you define for your data. The [GraphQL specification](https://spec.graphql.org/) was open-sourced in 2015 and has since been implemented in a variety of programming languages. GraphQL isn't tied to any specific database or storage engine—it is backed by your existing code and data.
 
 ## Describe your API with a type system
 
-A GraphQL service is created by [defining types and their fields](/learn/schema/), and then writing functions that [provide data for each field](/learn/execution/). For example, a GraphQL service that tells you the name of a logged-in user might look like this:
+A GraphQL service is created by [defining types and their fields](/learn/schema/), and then writing a function for each field to [provide the required data](/learn/execution/). For example, a GraphQL service that tells you the name of a logged-in user might look like this:
 
 ```graphql
 type Query {
@@ -78,7 +78,7 @@ type User {
 }
 ```
 
-GraphQL will continue to provide data as expected for the deprecated `name` field until it's determined that clients have updated their existing queries and the older field can be safely removed.
+Client tooling will encourage developers to use the new fields and remove usage of the deprecated `name` field. The field can be removed once it is determined it is no longer used; in the meantime GraphQL will continue to provide its data as expected.
 
 ## Try it out!
 
