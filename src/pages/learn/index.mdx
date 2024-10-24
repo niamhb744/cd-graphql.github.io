@@ -26,17 +26,17 @@ Along with functions for each field on each type:
 
 ```js
 // Provide data for the `me` field on the `Query` type
-function Query_me(obj, args, context, info) {
+function Query_me(query, args, context, info) {
   return context.request.auth.user
 }
 
 // Provide data for the `name` field on the `User` type
-function User_name(obj, args, context, info) {
-  return context.db.getUserFullName(obj.id)
+function User_name(user, args, context, info) {
+  return context.db.getUserFullName(user.id)
 }
 ```
 
-In the example above, the function that provides data for the `me` field on the `Query` type uses information about the authenticated user who made the request, while the the `name` field on the `User` type is populated by using that user's ID to fetch their full name from an existing database.
+In the example above, the function that provides data for the `me` field on the `Query` type uses information about the authenticated user who made the request, while the the `name` field on the `User` type is populated by using that user's ID to fetch their full name from a database.
 
 ## Query exactly what you need
 
@@ -64,7 +64,7 @@ Could produce the following JSON result:
 }
 ```
 
-With even a simple query, we can see some of the key features that make GraphQL so powerful. The client can make queries to the API that mirror the structure of the data that they need and then receive just that data in the expected shape with a single request—and without having to worry about what underlying data sources provided it.
+With even a simple query, we can see some of the key features that make GraphQL so powerful. The client can make queries to the API that mirror the structure of the data that they need and then receive just that data in the expected shape with a single request—and without having to worry about which underlying data sources provided it.
 
 ## Evolve your API without versioning
 
