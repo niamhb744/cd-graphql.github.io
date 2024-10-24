@@ -6,6 +6,8 @@ import { Callout } from "nextra/components"
 
 GraphQL is a query language for your API, and a server-side runtime for executing queries using a type system you define for your data. The [GraphQL specification](https://spec.graphql.org/) was open-sourced in 2015 and has since been implemented in a variety of programming languages. GraphQL isn't tied to any specific database or storage engine—it is backed by your existing code and data.
 
+<Callout type="info">If you're already familiar with GraphQL and would like to read documentation on how to build a GraphQL service, then there are libraries to help you implement GraphQL in [many different languages](/community/tools-and-libraries/?tags=server). There are also many libraries available that allow [client applications to query existing GraphQL APIs](/community/tools-and-libraries/?tags=client).</Callout>
+
 ## Describe your API with a type system
 
 A GraphQL service is created by [defining types and their fields](/learn/schema/), and then writing a function for each field to [provide the required data](/learn/execution/). For example, a GraphQL service that tells you the name of a logged-in user might look like this:
@@ -23,16 +25,14 @@ type User {
 Along with functions for each field on each type:
 
 ```js
-Query: {
-  me(obj, args, context, info) {
-    return context.request.auth.user
-  }
+// Provide data for the `me` field on the `Query` type
+function Query_me(obj, args, context, info) {
+  return context.request.auth.user
 }
 
-User: {
-  name(obj, args, context, info) {
-    return context.db.getUserFullName(obj.id)
-  }
+// Provide data for the `name` field on the `User` type
+function User_name(obj, args, context, info) {
+  return context.db.getUserFullName(obj.id)
 }
 ```
 
@@ -101,7 +101,5 @@ The examples in this guide are based on [a modified version of the SWAPI GraphQL
 ## Next steps
 
 Now that you know some key GraphQL concepts, you're ready to learn about all of the different aspects of its [type system](/schema/).
-
-If you're already familiar with GraphQL and would like to read documentation on how to build a GraphQL service, then there are libraries to help you implement GraphQL in [many different languages](/community/tools-and-libraries/?tags=server). There are also many libraries available that allow [client applications to query existing GraphQL APIs](/community/tools-and-libraries/?tags=client).
 
 For an in-depth learning experience with practical tutorials, see [the available training courses](/community/resources/training-courses).
