@@ -75,17 +75,7 @@ Arguments can be either required or optional. When an argument is optional, we c
 
 ### The Query, Mutation, and Subscription types
 
-Most types in your schema will just be normal Object types, but there are three special types within a schema:
-
-```graphql
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
-}
-```
-
-Every GraphQL service has a `query` [root operation type](https://spec.graphql.org/October2021/#sec-Root-Operation-Types) and may or may not have `mutation` and `subscription` root operation types. These types are the same as a regular Object type, but they are special because they define the _entry point_ of every GraphQL operation. So if you see a query that looks like this:
+Every GraphQL schema must support `query` operations. The _entry point_ for this [root operation type](https://spec.graphql.org/October2021/#sec-Root-Operation-Types) is a regular Object type called `Query` by default. So if you see a query that looks like this:
 
 ```graphql
 # { "graphiql": true }
@@ -104,9 +94,19 @@ type Query {
 }
 ```
 
-Mutations and subscriptions work similarly—you define fields on the `Mutation` and `Subscription` types, and those are available as the root `mutation` and `subscription` fields you can call in your request.
+Schemas may also support `mutation` and `subscription` operations by adding additional `Mutation` and `Subscription` types and then defining fields on the corresponding root operation types.
 
-It's important to remember that apart from the special status of being an entry point into the schema, the `Query`, `Mutation`, and `Subscription` types are the same as any other GraphQL Object type, and their fields work exactly the same way.
+It's important to remember that apart from the special status of being entry points into the schema, the `Query`, `Mutation`, and `Subscription` types are the same as any other GraphQL Object type, and their fields work exactly the same way.
+
+You can name your root operation types differently too; if you choose to do so then you will need to inform GraphQL of the new names using the `schema` keyword:
+
+```graphql
+schema {
+  query: MyQueryType
+  mutation: MyMutationType
+  subscription: MySubscriptionType
+}
+```
 
 ## Scalar types
 
