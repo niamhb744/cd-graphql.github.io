@@ -67,7 +67,7 @@ Arguments can be either required or optional. When an argument is optional, we c
 
 ## The Query and Mutation types
 
-There are two special "entry point" types that by default are named `Query` and `Mutation`. These types are the same as a regular object type, but they are special because they define the _entry point_ of every GraphQL query. So if you see a query that looks like:
+Every GraphQL schema must support `query` operations, the _entry point_ for these operations is a regular object type that by default is called `Query`. So if you see a query that looks like:
 
 ```graphql
 # { "graphiql": true }
@@ -90,9 +90,18 @@ type Query {
 }
 ```
 
-Mutations work in a similar way - you define fields on the `Mutation` type, and those are available as the root mutation fields you can call in your query.
+Schemas may also choose to support `mutation` operations by adding another entry point type, by default called `Mutation`. Mutations work in a similar way to queries - you define fields on the `Mutation` type, and those are available as the root mutation fields you can call in your mutation operation.
 
 It's important to remember that other than the special status of being the entry points, the `Query` and `Mutation` types are the same as any other GraphQL object type, and their fields work exactly the same way.
+
+You can choose to name your entry point types differently; if you choose to do so then you will need to inform GraphQL of the new names using the `schema` keyword:
+
+```graphql
+schema {
+  query: MyQueryType
+  mutation: MyMutationType
+}
+```
 
 ## Scalar types
 
