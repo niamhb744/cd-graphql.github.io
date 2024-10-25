@@ -4,9 +4,9 @@ import { Callout } from "nextra/components"
 
 <p className="learn-subtitle">Learn about the different elements of the GraphQL type system</p>
 
-The GraphQL [type system](https://spec.graphql.org/October2021/#sec-Type-System) describes what data can be queried from the API. The collection of those capabilities is referred to as the service's _schema_ and clients can use that schema to send queries to the API that return predictable results.
+The GraphQL [type system](https://spec.graphql.org/draft/#sec-Type-System) describes what data can be queried from the API. The collection of those capabilities is referred to as the service's _schema_ and clients can use that schema to send queries to the API that return predictable results.
 
-On this page, we'll explore GraphQL's [six kinds of named type definitions](https://spec.graphql.org/October2021/#sec-Types) as well as other features of the type system to learn how they may be used to describe your data and the relationships between them. Since GraphQL can be used with any backend framework or programming language, we'll avoid implementation-specific details and talk only about the concepts.
+On this page, we'll explore GraphQL's [six kinds of named type definitions](https://spec.graphql.org/draft/#sec-Types) as well as other features of the type system to learn how they may be used to describe your data and the relationships between them. Since GraphQL can be used with any backend framework or programming language, we'll avoid implementation-specific details and talk only about the concepts.
 
 ## Type system
 
@@ -38,7 +38,7 @@ Since we can't rely on a specific programming language to discuss GraphQL schema
 
 ## Object types and fields
 
-The most basic components of a GraphQL schema are [Object types](https://spec.graphql.org/October2021/#sec-Objects), which just represent a kind of object you can fetch from your service, and what fields it has. In SDL, we represent it like this:
+The most basic components of a GraphQL schema are [Object types](https://spec.graphql.org/draft/#sec-Objects), which just represent a kind of object you can fetch from your service, and what fields it has. In SDL, we represent it like this:
 
 ```graphql
 type Character {
@@ -59,7 +59,7 @@ Now you know what a GraphQL Object type looks like and how to read the basics of
 
 ### Arguments
 
-Every field on a GraphQL Object type can have zero or more [arguments](https://spec.graphql.org/October2021/#sec-Field-Arguments), for example, the `length` field below:
+Every field on a GraphQL Object type can have zero or more [arguments](https://spec.graphql.org/draft/#sec-Field-Arguments), for example, the `length` field below:
 
 ```graphql
 type Starship {
@@ -75,7 +75,7 @@ Arguments can be either required or optional. When an argument is optional, we c
 
 ### The Query, Mutation, and Subscription types
 
-Every GraphQL schema must support `query` operations. The _entry point_ for this [root operation type](https://spec.graphql.org/October2021/#sec-Root-Operation-Types) is a regular Object type called `Query` by default. So if you see a query that looks like this:
+Every GraphQL schema must support `query` operations. The _entry point_ for this [root operation type](https://spec.graphql.org/draft/#sec-Root-Operation-Types) is a regular Object type called `Query` by default. So if you see a query that looks like this:
 
 ```graphql
 # { "graphiql": true }
@@ -110,7 +110,7 @@ schema {
 
 ## Scalar types
 
-A GraphQL Object type has a name and fields, but at some point, those fields must resolve to some concrete data. That's where the [Scalar types](https://spec.graphql.org/October2021/#sec-Scalars) come in: they represent the leaf values of the query.
+A GraphQL Object type has a name and fields, but at some point, those fields must resolve to some concrete data. That's where the [Scalar types](https://spec.graphql.org/draft/#sec-Scalars) come in: they represent the leaf values of the query.
 
 In the following query, the `name` and `appearsIn` fields will resolve to Scalar types:
 
@@ -126,7 +126,7 @@ In the following query, the `name` and `appearsIn` fields will resolve to Scalar
 
 We know this because those fields don't have any sub-fields—they are the leaves of the query.
 
-GraphQL comes with a set of [default Scalar types](https://spec.graphql.org/October2021/#sec-Scalars.Built-in-Scalars) out of the box:
+GraphQL comes with a set of [default Scalar types](https://spec.graphql.org/draft/#sec-Scalars.Built-in-Scalars) out of the box:
 
 - `Int`: A signed 32‐bit integer.
 - `Float`: A signed double-precision floating-point value.
@@ -144,7 +144,7 @@ Then it's up to our implementation to define how that type should be serialized,
 
 ## Enum types
 
-[Enum types](https://spec.graphql.org/October2021/#sec-Enums), also known as enumeration types, are a special kind of scalar that is restricted to a particular set of allowed values. This allows you to:
+[Enum types](https://spec.graphql.org/draft/#sec-Enums), also known as enumeration types, are a special kind of scalar that is restricted to a particular set of allowed values. This allows you to:
 
 1. Validate that any arguments of this type are one of the allowed values
 2. Communicate through the type system that a field will always be one of a finite set of values
@@ -167,7 +167,7 @@ This means that wherever we use the type `Episode` in our schema, we expect it t
 
 Types are assumed to be nullable and singular by default in GraphQL. However, when you use these named types in a schema (or in [query variable declarations](/learn/queries/#variables)) you can apply additional _type modifiers_ that will affect the meaning of those values.
 
-As we saw with the Object type example above, GraphQL supports two type modifiers—the [List](https://spec.graphql.org/October2021/#sec-List) and [Non-Null](https://spec.graphql.org/October2021/#sec-List) types—and they can be used individually or in combination with each other.
+As we saw with the Object type example above, GraphQL supports two type modifiers—the [List](https://spec.graphql.org/draft/#sec-List) and [Non-Null](https://spec.graphql.org/draft/#sec-Non-Null) types—and they can be used individually or in combination with each other.
 
 ### Non-Null
 
@@ -254,7 +254,7 @@ You can arbitrarily nest any number of Non-Null and List modifiers, according to
 
 ## Interface types
 
-Like many type systems, GraphQL supports _abstract types_. The first of these types that we'll explore is an [Interface type](https://spec.graphql.org/October2021/#sec-Interfaces), which defines a certain set of fields that a concrete Object type or other Interface type must also include to implement it.
+Like many type systems, GraphQL supports _abstract types_. The first of these types that we'll explore is an [Interface type](https://spec.graphql.org/draft/#sec-Interfaces), which defines a certain set of fields that a concrete Object type or other Interface type must also include to implement it.
 
 For example, you could have an `Character` Interface type that represents any character in the Star Wars trilogy:
 
@@ -341,7 +341,7 @@ Note that Interface types may not implement themselves or contain any cyclic ref
 
 ## Union types
 
-GraphQL supports a second abstract type called a [Union type](https://spec.graphql.org/October2021/#sec-Unions). They share similarities with Interface types, but they cannot define any shared fields among the constituent types.
+GraphQL supports a second abstract type called a [Union type](https://spec.graphql.org/draft/#sec-Unions). They share similarities with Interface types, but they cannot define any shared fields among the constituent types.
 
 A Union type is defined by indicating its member Object types:
 
@@ -406,9 +406,9 @@ Note that `name` is still specified on `Starship` because otherwise it wouldn't 
 
 Most of the examples we've covered on this page demonstrate how Object, Scalar, Enum, Interface, and Union types may be used as _output types_ for the fields in a schema. But we have also seen that field arguments must specify their _input types_. 
 
-So far, we've only talked about using scalar values (like Enums or String types) as an input type for a field argument. However, you can also easily pass complex objects as arguments using an [Input Object type](https://spec.graphql.org/October2021/#sec-Interfaces), which is the last of named types in GraphQL that we'll explore.
+So far, we've only talked about using scalar values (like Enums or String types) as an input type for a field argument. However, you can also easily pass complex objects as arguments using an [Input Object type](https://spec.graphql.org/draft/#sec-Input-Objects), which is the last of named types in GraphQL that we'll explore.
 
-This is particularly valuable in the case of [mutations](https://graphql.org/learn/mutations/), where you might want to pass in a whole object to be created. In SDL, Input Object types look the same as regular Object types, but with the keyword `input` instead of `type`:
+This is particularly valuable in the case of [mutations](/learn/queries/#mutations), where you might want to pass in a whole object to be created. In SDL, Input Object types look the same as regular Object types, but with the keyword `input` instead of `type`:
 
 ```graphql
 input ReviewInput {
@@ -443,7 +443,7 @@ The fields on an Input Object type can refer to other Input Object types, but yo
 
 ## Directives
 
-In certain instances where field arguments are insufficient or certain common behaviors must be replicated in multiple locations, [directives](https://spec.graphql.org/October2021/#sec-Type-System.Directives) allow us to modify parts of a GraphQL schema or operation by using an `@` character followed by the directive's name.
+In certain instances where field arguments are insufficient or certain common behaviors must be replicated in multiple locations, [directives](https://spec.graphql.org/draft/#sec-Type-System.Directives) allow us to modify parts of a GraphQL schema or operation by using an `@` character followed by the directive's name.
 
 _Type system directives_ allow us to annotate the types, fields, and arguments in a schema so that they may be validated or executed differently.
 
@@ -451,7 +451,7 @@ _Type system directives_ allow us to annotate the types, fields, and arguments i
 Directives may also be defined for use in GraphQL operations as _executable directives_. [Read more about executable directives on the Queries page.](/learn/queries/#directives)
 </Callout>
 
-The GraphQL specification defines several [built-in directives](https://spec.graphql.org/October2021/#sec-Type-System.Directives.Built-in-Directives). For example, for implementations that support SDL, the `@deprecated` directive will be available to annotate deprecated parts of the schema:
+The GraphQL specification defines several [built-in directives](https://spec.graphql.org/draft/#sec-Type-System.Directives.Built-in-Directives). For example, for implementations that support SDL, the `@deprecated` directive will be available to annotate deprecated parts of the schema:
 
 ```graphql
 type User {
@@ -515,7 +515,7 @@ type Query {
 }
 ```
 
-In addition to making a GraphQL API schema more expressive, descriptions are helpful to client developers because they are available in [introspection queries](https://graphql.org/learn/introspection/) and visible in developer tools such as [GraphiQL](https://github.com/graphql/graphiql).
+In addition to making a GraphQL API schema more expressive, descriptions are helpful to client developers because they are available in [introspection queries](/learn/introspection/) and visible in developer tools such as [GraphiQL](https://github.com/graphql/graphiql).
 ### Comments
 
 Occasionally, you may need to add comments in a schema that do not describe types, fields, or arguments, and are not meant to be seen by clients. In those cases, you can add a single-line comment to SDL by preceding the text with a `#` character:
@@ -556,4 +556,4 @@ To recap what we've learned about schemas and types:
 - Type system directives can be applied to the types, fields, and arguments in a schema to alter how they are validated and executed during a query
 - GraphQL supports schema documentation using type, field, and argument descriptions, and it also supports comments that are ignored by the parser
 
-Now that you understand the key features of the type system, you're ready to learn more about how to [query data from a GraphQL API](https://graphql.org/learn/queries/).
+Now that you understand the key features of the type system, you're ready to learn more about how to [query data from a GraphQL API](/learn/queries/).
