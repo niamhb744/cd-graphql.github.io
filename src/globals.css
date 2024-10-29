@@ -493,4 +493,5 @@ div[id^="headlessui-menu-items"] {
   @apply border-neutral-200;
   @apply border-b;
   @apply text-xl;
+  @apply dark:border-neutral-700/80;
 }
