@@ -39,7 +39,7 @@ For the previous example, we could imagine publishing a `REVIEW_CREATED` message
 Note that subscriptions are different from the concept of _live queries_, which are not formally described in the specification and are often implemented differently in GraphQL various implementations using an `@live` executable directive. [Read more about the ongoing discussion on a formal specification for live queries here.](https://github.com/graphql/graphql-spec/issues/386)
 </Callout>
 
-As with query and mutation operations, GraphQL doesn't specify what transport protocol to use, so it's up to the server to decide. In practice, you will often see them implemented with WebSockets or server-sent events. Clients that want to send subscription operations will also need to support the chosen protocol.
+As with query and mutation operations, GraphQL doesn't specify what transport protocol to use, so it's up to the server to decide. In practice, you will often see them implemented with WebSockets or server-sent events. Clients that want to send subscription operations will also need to support the chosen protocol. There are community-maintained specifications for implementing GraphQL subscriptions with [WebSockets](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) and [server-sent events](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
 
 One important distinction to make with subscription operations is that a document may contain a number of different subscription operations with different root fields, but each operation must have exactly one root field. 
 
