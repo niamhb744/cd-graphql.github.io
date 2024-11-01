@@ -6,7 +6,7 @@ github: https://github.com/dsal3389/ql
 ---
 
 GraphQL client library, wrapped around pydantic classes for type validation,
-provide safe and simple way to query data from a GraphQL API.
+provides a safe and simple way to query data from a GraphQL API.
 
 Features:
 
