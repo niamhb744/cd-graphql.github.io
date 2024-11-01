@@ -96,7 +96,7 @@ type Query {
 
 Schemas may also support `mutation` and `subscription` operations by adding additional `Mutation` and `Subscription` types and then defining fields on the corresponding root operation types.
 
-It's important to remember that apart from the special status of being entry points into the schema, the `Query`, `Mutation`, and `Subscription` types are the same as any other GraphQL Object type, and their fields work exactly the same way.
+It's important to remember that other than the special status of being entry points into the schema, the `Query`, `Mutation`, and `Subscription` types are the same as any other GraphQL Object type, and their fields work exactly the same way.
 
 You can name your root operation types differently too; if you choose to do so then you will need to inform GraphQL of the new names using the `schema` keyword:
 
@@ -132,7 +132,7 @@ GraphQL comes with a set of [default Scalar types](https://spec.graphql.org/draf
 - `Float`: A signed double-precision floating-point value.
 - `String`: A UTF‐8 character sequence.
 - `Boolean`: `true` or `false`.
-- `ID`: This type represents a unique identifier, often used to refetch an object or as the key for a cache. The `ID` type is serialized in the same way as a `String`; however, defining it as an `ID` signifies that it is not intended to be human‐readable.
+- `ID`: A unique identifier, often used to refetch an object or as the key for a cache. The `ID` type is serialized in the same way as a `String`; however, defining it as an `ID` signifies that it is not intended to be human‐readable.
 
 In most GraphQL service implementations, there is also a way to specify custom Scalar types. For example, we could define a `Date` type:
 
@@ -192,7 +192,7 @@ As we saw in an example above, the Non-Null type modifier can also be used when 
 }
 ```
 
-### Lists
+### List
 
 Lists work in a similar way. We can use a type modifier to mark a type as a List type, which indicates that this field will return an array of that type. In SDL, this is denoted by wrapping the type in square brackets, `[` and `]`. It works the same for arguments, where the validation step will expect an array for that value. Here's an example:
 
@@ -341,7 +341,7 @@ Note that Interface types may not implement themselves or contain any cyclic ref
 
 ## Union types
 
-GraphQL supports a second abstract type called a [Union type](https://spec.graphql.org/draft/#sec-Unions). They share similarities with Interface types, but they cannot define any shared fields among the constituent types.
+GraphQL supports a second abstract type called a [Union type](https://spec.graphql.org/draft/#sec-Unions). Union types share similarities with Interface types, but they cannot define any shared fields among the constituent types.
 
 A Union type is defined by indicating its member Object types:
 
@@ -374,7 +374,7 @@ In this case, if you query a field that returns the `SearchResult` Union type, y
 }
 ```
 
-The `__typename` field is a special _meta-field_ that resolves to a `String` and lets you differentiate between data types on the client.
+The `__typename` field is a special _meta-field_ that automatically exists on every Object type and resolves to the name of that type, providing a way to differentiate between data types on the client.
 
 Also, in this case, since `Human` and `Droid` share a common interface (`Character`), you can query their common fields in one place and still get the same result:
 
@@ -406,9 +406,9 @@ Note that `name` is still specified on `Starship` because otherwise it wouldn't 
 
 Most of the examples we've covered on this page demonstrate how Object, Scalar, Enum, Interface, and Union types may be used as _output types_ for the fields in a schema. But we have also seen that field arguments must specify their _input types_. 
 
-So far, we've only talked about using scalar values (like Enums or String types) as an input type for a field argument. However, you can also easily pass complex objects as arguments using an [Input Object type](https://spec.graphql.org/draft/#sec-Input-Objects), which is the last of named types in GraphQL that we'll explore.
+So far, we've only talked about using scalar values (like Enums or String types) as an input type for a field argument. However, you can also pass complex objects as arguments using an [Input Object type](https://spec.graphql.org/draft/#sec-Input-Objects), which is the last kind of named types in GraphQL that we'll explore.
 
-This is particularly valuable in the case of [mutations](/learn/queries/#mutations), where you might want to pass in a whole object to be created. In SDL, Input Object types look the same as regular Object types, but with the keyword `input` instead of `type`:
+This is particularly valuable in the case of [mutations](/learn/queries/#mutations), where you might want to pass in a whole object to be created. In SDL, Input Object types look similar to regular Object types, but with the keyword `input` instead of `type`:
 
 ```graphql
 input ReviewInput {
@@ -516,6 +516,7 @@ type Query {
 ```
 
 In addition to making a GraphQL API schema more expressive, descriptions are helpful to client developers because they are available in [introspection queries](/learn/introspection/) and visible in developer tools such as [GraphiQL](https://github.com/graphql/graphiql).
+
 ### Comments
 
 Occasionally, you may need to add comments in a schema that do not describe types, fields, or arguments, and are not meant to be seen by clients. In those cases, you can add a single-line comment to SDL by preceding the text with a `#` character:
@@ -550,9 +551,9 @@ To recap what we've learned about schemas and types:
 - There are six kinds of named type definitions in GraphQL: Object, Scalar, Enum, Interface, Union, and Input Object types
 - Object types contain fields that specify output types, and those fields may have arguments that specify input types
 - The `Int`, `Float`, `String`, `Boolean`, and `ID` Scalar types are built into GraphQL, and you can also define your own custom scalars
-- Like Scalar types, Enum types represent leaf values in a GraphQL schema but they are limited to a finite list of values
+- Like Scalar types, Enum types represent leaf values in a GraphQL schema but they are limited to a finite set of values
 - Interface and Union types are abstract types that allow different concrete Object types to be output from a single field
-- Input Object types allow you to pass more complex values into a field argument than Scalar and Enum types allow
+- Input Object types allow you to pass more complex values into a field argument or directive argument than Scalar and Enum types allow
 - Type system directives can be applied to the types, fields, and arguments in a schema to alter how they are validated and executed during a query
 - GraphQL supports schema documentation using type, field, and argument descriptions, and it also supports comments that are ignored by the parser
 
