@@ -5,15 +5,17 @@ url: https://dsal3389.github.io/ql/
 github: https://github.com/dsal3389/ql
 ---
 
-Graphql client library, wrapped around pydantic classes for type validation,
-provide safe and simple way to query data from a graphql api.
+GraphQL client library, wrapped around pydantic classes for type validation,
+provide safe and simple way to query data from a GraphQL API.
 
-features:
-  * python objects to valid graphql string
+Features:
+
+  * python objects to valid GraphQL string
   * scalar query responses
   * typesafety
 
-## install
+## Install
+
 ```console
 pip3 install pydantic-graphql
 ```
