@@ -10,9 +10,9 @@ provides a safe and simple way to query data from a GraphQL API.
 
 Features:
 
-  * python objects to valid GraphQL string
-  * scalar query responses
-  * typesafety
+- python objects to valid GraphQL string
+- scalar query responses
+- type-safety
 
 ## Install
 
