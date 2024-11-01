@@ -552,6 +552,7 @@ To recap what we've learned about schemas and types:
 - Object types contain fields that specify output types, and those fields may have arguments that specify input types
 - The `Int`, `Float`, `String`, `Boolean`, and `ID` Scalar types are built into GraphQL, and you can also define your own custom scalars
 - Like Scalar types, Enum types represent leaf values in a GraphQL schema but they are limited to a finite set of values
+- The List (`[]`) and Non-Null (`!`) type modifiers allow you to change the default behavior for a field's output type or argument's input type
 - Interface and Union types are abstract types that allow different concrete Object types to be output from a single field
 - Input Object types allow you to pass more complex values into a field argument or directive argument than Scalar and Enum types allow
 - Type system directives can be applied to the types, fields, and arguments in a schema to alter how they are validated and executed during a query
