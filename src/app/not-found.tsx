@@ -13,7 +13,7 @@ export default function Page() {
     name: "graphql.github.io",
   }
 
-  const referrer = document?.referrer
+  const referrer = mounted && document.referrer
   const title = `Found broken \`${mounted ? pathname?.replace(/\/$/, "") : ""}\` link${referrer ? ` from \`${referrer}\`` : ""}. Please fix!`
   const labels = "bug"
 
