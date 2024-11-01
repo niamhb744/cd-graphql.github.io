@@ -1,6 +1,6 @@
 ---
 name: ql
-description: non intrusive python graphql client wrapped around pydantic.
+description: Non intrusive python GraphQL client wrapped around pydantic.
 url: https://dsal3389.github.io/ql/
 github: https://github.com/dsal3389/ql
 ---
