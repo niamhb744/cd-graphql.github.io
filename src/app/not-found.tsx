@@ -13,7 +13,8 @@ export default function Page() {
     name: "graphql.github.io",
   }
 
-  const title = `Found broken \`${mounted ? pathname?.replace(/\/$/, "") : ""}\` link. Please fix!`
+  const referrer = document?.referrer
+  const title = `Found broken \`${mounted ? pathname?.replace(/\/$/, "") : ""}\` link${referrer ? ` from \`${referrer}\`` : ""}. Please fix!`
   const labels = "bug"
 
   const url = `${repo.origin}/${repo.owner}/${
