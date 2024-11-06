@@ -63,7 +63,7 @@ GraphQL implementations that adhere to the [GraphQL over HTTP specification](htt
 
 Using `GET` can improve query performance because requests made with this HTTP method are typically considered cacheable by default and can help facilitate HTTP caching or the use of a content delivery network (CDN) when caching-related headers are provided in the server response. 
 
-However, because browsers and CDNs impose size limits on URLs, it may not be possible to send a large document for complex operations in the query string of the URL. Using _trusted documents_ (also known as _persisted queries_) or _automatic persisted queries_ will allow the client to send a hash of the query instead, and the server can look up the full version of the document by looking up the hash in a server-side store before validating and executing the operation.
+However, because browsers and CDNs impose size limits on URLs, it may not be possible to send a large document for complex operations in the query string of the URL. Using _persisted queries_, either in the form of _trusted documents_ or _automatic persisted queries_, will allow the client to send a hash of the query instead, and the server can look up the full version of the document by looking up the hash in a server-side store before validating and executing the operation.
 
 Sending hashed queries instead of their plaintext versions has the additional benefit of reducing the amount of data sent by the client in the network request.
 
