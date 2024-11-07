@@ -9,18 +9,18 @@ The GraphQL specification doesn't require paricular client-server protocols when
 Note that the guidelines that follow only apply to stateless query and mutation operations. Visit the [Subscriptions page](/learn/subscriptions) for more information on transport protocols that commonly support these requests.
 
 <Callout type="info">
-The recommendations on this page align with the detailed [HTTP transport specification](https://github.com/graphql/graphql-over-http) currently in development. Though not yet finalized, this draft specification acts as a single source of truth for GraphQL client and library maintainers, detailing how to expose and consume a GraphQL API using an HTTP transport. Unlike the language specification, adherence is not mandatory, but most implementations are moving towards these standards to maximize interoperability.
+The recommendations on this page align with the detailed [GraphQL-over-HTTP specification](https://graphql.github.io/graphql-over-http/draft/) currently in development. Though not yet finalized, this draft specification acts as a single source of truth for GraphQL client and library maintainers, detailing how to expose and consume a GraphQL API using an HTTP transport. Unlike the language specification, adherence is not mandatory, but most implementations are moving towards these standards to maximize interoperability.
 </Callout>
 
 ## API endpoint
 
-HTTP is commonly associated with REST, which uses "resources" as its core concept. In contrast, GraphQL's conceptual model is an [entity graph](/learn/thinking-in-graphs/). As a result, entities in GraphQL are not identified by URLs. Instead, a GraphQL server operates on a single URL/endpoint, usually `/graphql`, and all GraphQL requests for a given service should be directed at this endpoint.
+HTTP is commonly associated with REST, which uses "resources" as its core concept. In contrast, GraphQL's conceptual model is an [entity graph](/learn/thinking-in-graphs/). As a result, entities in GraphQL are not identified by URLs. Instead, a GraphQL server operates on a single URL/endpoint, usually `/graphql`, and all GraphQL requests for a given service should be directed to this endpoint.
 
 ## Where auth happens
 
-Most modern web frameworks use a pipeline model where requests are passed through a stack of _middleware_, also known as  _filters_ or _plugins_. As the request flows through the pipeline, it can be inspected, transformed, modified, or terminated with a response. GraphQL should be placed after all authentication middleware so that you have access to the same session and user information you would in your HTTP endpoint handlers.
+Most modern web frameworks use a pipeline model where requests are passed through a stack of _middleware_, also known as _filters_ or _plugins_. As the request flows through the pipeline, it can be inspected, transformed, modified, or terminated with a response. GraphQL should be placed after all authentication middleware so that you have access to the same session and user information you would in your other HTTP endpoint handlers.
 
-After authentication, the server should not make any [authorization](/learn/authorization/) decisions about the request until GraphQL execution begins. Specifically, field-level authorization should be done by the GraphQL schema during [GraphQL's ExecuteRequest()](https://spec.graphql.org/draft/#ExecuteRequest()), allowing for a partial response to be generated if authorization-related errors are raised.
+After authentication, the server should not make any [authorization](/learn/authorization/) decisions about the request until GraphQL execution begins. Specifically, field-level authorization should be enforced by the business logic called from resolvers during [GraphQL's ExecuteRequest()](https://spec.graphql.org/draft/#ExecuteRequest()), allowing for a partial response to be generated if authorization-related errors are raised.
 
 ## Request format
 
@@ -31,12 +31,12 @@ GraphQL clients and servers should support JSON for serialization and may suppor
 If no encoding information is included with this header, then it will be assumed to be `utf-8`. However, the server may respond with an error if a client doesn't provide the `Accept` header with a request.
 
 <Callout type="info">
-The `application/graphql-response+json` is described in the draft GraphQL over HTTP specification. To ensure compatibility, if a client sends a request to a legacy GraphQL server before 1st January 2025, the `Accept` header should also include the `application/json` media type as follows: `application/graphql-response+json; charset=utf-8, application/json; charset=utf-8`
+The `application/graphql-response+json` is described in the draft GraphQL over HTTP specification. To ensure compatibility, if a client sends a request to a legacy GraphQL server before 1st January 2025, the `Accept` header should also include the `application/json` media type as follows: `application/graphql-response+json;charset=utf-8, application/json;charset=utf-8`
 </Callout>
 
 ### Methods
 
-Your GraphQL HTTP server must handle the HTTP `POST` method, and may also accept the `GET` method for incoming API requests.
+Your GraphQL HTTP server must handle the HTTP `POST` method for query and mutation operations, and may also accept the `GET` method for query operations.
 
 #### `POST` request and body
 
@@ -51,9 +51,9 @@ A standard GraphQL POST request should set `application/json` for its `Content-t
 }
 ```
 
-The `query` parameter is required and will contain the source text of the GraphQL document. Note that this parameter may contain documents for query or mutation operations.
+The `query` parameter is required and will contain the source text of a GraphQL document. Note that the term `query` here is a misnomer: the document may contain any valid GraphQL operations (and associated fragments).
 
-The `operationName`, `variables`, and `extensions` parameters are optional fields. `operationName` is only required if multiple operations are present in the query.
+The `operationName`, `variables`, and `extensions` parameters are optional fields. `operationName` is only required if multiple operations are present in the `query` document.
 
 Note that if the `Content-type` header is missing in the client's request, then the server should respond with a `4xx` status code. As with the `Accept` header, `utf-8` encoding is assumed for a request body with an `application/json` media type when this information is not explicitly provided.
 
@@ -81,11 +81,11 @@ Query variables can be sent as a JSON-encoded string in an additional query para
 
 When choosing an HTTP method for a GraphQL request, there are a few points to consider. First, support for HTTP methods other than `POST` will be at the discretion of the GraphQL server, so a client will be limited to the supported verbs.
 
-Additionally, the `GET` HTTP method may only be used for query operations, so if a client sends a mutation operation in a document then it must use the `POST` method instead.
+Additionally, the `GET` HTTP method may only be used for `query` operations, so if a client requests execution of a `mutation` operation then it must use the `POST` method instead.
 
 When servers that do support the `GET` method for query operations, a client may be encouraged to leverage this option to facilitate HTTP caching or edge caching in a content delivery network (CDN). However, because GraphQL documents strings may be quite long for complex operations, the query parameters may exceed the limits that browsers and CDNs impose on URL lengths.
 
-In these cases, it would be necessary to use something like _trusted documents_ (sometimes referred to as _persisted queries_) or _automatic persisted queries_, where the server stores hashes of known GraphQL documents and the clients can send a hash as the `query` parameter value in a `GET` request instead of the full source text of the query operation.
+In these cases, a common approach is for the server to store identified GraphQL documents using a technique such as [_persisted documents_](https://github.com/graphql/graphql-over-http/pull/264), _automatic persisted queries_, or _trusted documents_. This allows the client to send a short document identifier instead of the full query text.
 
 ## Response format
 
@@ -105,13 +105,13 @@ Regardless of the HTTP method used to send the query and variables, the response
 }
 ```
 
-If no errors were returned, the `errors` field should not be present in the response. If no data is returned, [according to the GraphQL spec](https://spec.graphql.org/October2021/#sec-Data), the `data` field should only be included if no errors occurred before execution. The `extensions` field is optional and information provided here will be at the discretion of the GraphQL implementation.
+If no errors were returned, the `errors` field must not be present in the response. If errors occurred before execution could start, the `errors` field must include these errors and the `data` field must not be present in the response. The `extensions` field is optional and information provided here will be at the discretion of the GraphQL implementation.
 
 You can read more about GraphQL spec-compliant response formats on the [Response page](/learn/response/).
 
 ### Status Codes
 
-If a response contains a `data` key and its value is not `null`, then the server should respond with a `2xx` status code for either the `application/graphql-response+json` or `application/json` media types.
+If a response contains a `data` key and its value is not `null`, then the server should respond with a `2xx` status code for either the `application/graphql-response+json` or `application/json` media types. This is the case even if the response includes errors, since HTTP does not yet have a status code representing "partial success."
 
 For validation errors that prevent the execution of a GraphQL operation, the server will typically send a `400` status code, although some legacy servers may return a `2xx` status code when the `application/json` media type is used.
 
@@ -129,7 +129,7 @@ You can view a [list of servers written in many other languages here](/community
 
 To recap these recommendations for serving GraphQL over HTTP:
 
-- The server should handle user authentication before a GraphQL request is validated; authorization should happen during request execution against the schema
+- The server should handle user authentication before a GraphQL request is validated; authorization should happen within your business logic during GraphQL request execution
 - GraphQL APIs are exposed at a single endpoint, typically ending with `/graphql`
 - GraphQL clients and servers should support JSON, but may support other formats
 - Client should indicate a media type on the `Accept` header of `application/graphql-response+json`
