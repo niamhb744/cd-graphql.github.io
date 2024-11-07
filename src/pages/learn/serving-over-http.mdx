@@ -83,7 +83,7 @@ When choosing an HTTP method for a GraphQL request, there are a few points to co
 
 Additionally, the `GET` HTTP method may only be used for `query` operations, so if a client requests execution of a `mutation` operation then it must use the `POST` method instead.
 
-When servers that do support the `GET` method for query operations, a client may be encouraged to leverage this option to facilitate HTTP caching or edge caching in a content delivery network (CDN). However, because GraphQL documents strings may be quite long for complex operations, the query parameters may exceed the limits that browsers and CDNs impose on URL lengths.
+When servers do support the `GET` method for query operations, a client may be encouraged to leverage this option to facilitate HTTP caching or edge caching in a content delivery network (CDN). However, because GraphQL documents strings may be quite long for complex operations, the query parameters may exceed the limits that browsers and CDNs impose on URL lengths.
 
 In these cases, a common approach is for the server to store identified GraphQL documents using a technique such as [_persisted documents_](https://github.com/graphql/graphql-over-http/pull/264), _automatic persisted queries_, or _trusted documents_. This allows the client to send a short document identifier instead of the full query text.
 
