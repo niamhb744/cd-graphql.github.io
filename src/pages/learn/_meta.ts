@@ -20,4 +20,5 @@ export default {
   pagination: "",
   "global-object-identification": "",
   caching: "",
+  security: "",
 }
