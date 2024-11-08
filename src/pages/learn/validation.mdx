@@ -4,15 +4,15 @@
 
 On this page, we'll explore an important phase in the lifecycle of a GraphQL request called [validation](https://spec.graphql.org/draft/#sec-Validation). A request must be syntactically correct to run, but it should also be valid when checked against the API's schema. 
 
-In practice, when a GraphQL operation reaches the server, the document is first parsed and then validated using the type system. This allows servers and clients to effectively inform developers when an invalid query has been created, and without relying on runtime checks. Once the operation is validated, it can be [executed](/learn/execution/) on the server and a response will be delivered to the client.
+In practice, when a GraphQL operation reaches the server, the document is first parsed and then validated using the type system. This allows servers and clients to effectively inform developers when an invalid query has been created, without relying on runtime checks. Once the operation is validated, it can be [executed](/learn/execution/) on the server and a response will be delivered to the client.
 
 ## Validation examples
 
-The GraphQL specification describes the detailed conditions that must be satisfied for a request to be considered valid. In the sections that follow, we'll look at a few examples of common validation issues that occur in GraphQL operations.
+The GraphQL specification describes the detailed conditions that must be satisfied for a request to be considered valid. In the sections that follow, we'll look at a few examples of common validation issues that may occur in GraphQL operations.
 
 ### Requesting non-existent fields
 
-When we query for fields, we have to request a field on the given type. So as `hero` returns a `Character` type, we have to query for a field that's defined on `Character`. That type does not have a `favoriteSpaceship` field, so this query is invalid:
+When we query for a field, the field must be defined on the relevant type. As `hero` returns a `Character` type, its selection set may only request the `Character` type's fields; `Character` does not have a `favoriteSpaceship` field, so this query is invalid:
 
 ```graphql
 # { "graphiql": true }
@@ -24,9 +24,9 @@ query {
 }
 ```
 
-### Selecting invalid leaf fields
+### Selection sets and leaf fields
 
-Whenever we query for a field and it returns something other than a Scalar or Enum type, we need to specify what data we want to get back from the field. The `hero` query field returns a `Character`, and we've already seen examples that request fields like `name` and `appearsIn` on it. If we omit those leaf field selections, then the query will not be valid:
+Whenever we query for a field and it returns something other than a Scalar or Enum type, we need to specify what data we want to get back from the field (a "selection set"). The `hero` query field returns a `Character`, and we've already seen examples that request fields like `name` and `appearsIn` on it. If we omit those leaf field selections, then the query will not be valid:
 
 ```graphql
 # { "graphiql": true }
@@ -36,7 +36,7 @@ query {
 }
 ```
 
-Similarly, if the leaf field is a scalar value, it doesn't make sense to query for additional fields on it, and doing so will make the query invalid:
+Similarly, querying fields of a scalar or enum doesn’t make sense, therefore adding a selection set to a leaf field will make the query invalid:
 
 ```graphql
 # { "graphiql": true }
@@ -119,9 +119,7 @@ fragment NameAndAppearances on Character {
 }
 ```
 
-And this query is valid. Let's take a look at some invalid queries...
-
-A fragment cannot refer to itself or create a cycle, as this could result in an unbounded result! Here's the same query above but without the explicit three levels of nesting:
+The following is an alternative to the above query, attempting to use recursion instead of the explicit three levels of nesting. This new query is invalid because a fragment cannot refer to itself (directly or indirectly) since the resulting cycle could create an unbounded result!
 
 ```graphql
 # { "graphiql": true }
@@ -140,7 +138,7 @@ fragment NameAndAppearancesAndFriends on Character {
 }
 ```
 
-This has just scratched the surface of the validation system; there are a number of validation rules in place to ensure that a GraphQL operation is semantically meaningful. The specification goes into more detail about this topic in the [validation section](https://spec.graphql.org/draft/#sec-Validation), and the [validation directory](https://github.com/graphql/graphql-js/blob/main/src/validation) in GraphQL.js contains code implementing a specification-compliant GraphQL validator.
+This has just scratched the surface of the validation system; there are a number of validation rules in place to ensure that a GraphQL operation is semantically meaningful. The specification goes into more detail about this topic in the [validation section](https://spec.graphql.org/draft/#sec-Validation), and the [validation directory in the reference implementation](https://github.com/graphql/graphql-js/blob/main/src/validation) contains code implementing a specification-compliant GraphQL validator.
 
 ## Validation errors
 
@@ -152,8 +150,8 @@ And because the GraphQL specification requires all implementations to validate i
 
 To recap what we've learned about validation:
 
-- The GraphQL documents that clients submit in their requests must be syntactically correct and considered valid when checked against the schema
-- The GraphQL specification requires that implementations check that incoming requests contain valid field selections, correct fragment usage, and more
-- When a validation issue occurs, the server will raise a request error and return information about what happened to the client before field execution occurs
+- To be executed, requests must include a syntactically correct document that is considered valid when checked against the schema
+- The specification requires implementations check incoming requests contain valid field selections, correct fragment usage, and more
+- When a validation issue occurs, the server will raise a request error and return to the client information about what happened; field execution will not start
 
-Head over to the [Execution](/learn/execution/) page to learn how GraphQL provides data for each field in a request after the validation step is complete.
+Head over to the [Execution](/learn/execution/) page to learn how GraphQL provides data for each field in a request after the validation step successfully completes.
