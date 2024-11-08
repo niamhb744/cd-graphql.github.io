@@ -82,7 +82,7 @@ const client = new ApolloClient({
 });
 ```
 
-Semantic Nullability gives clients and GraphQL tools more flexibility in how they respond to errors. Some may want to recreate the existing destructive behavior of GraphQL or do something specific to their domain like Relay's use of React error boundaries.
+Semantic Nullability gives clients and GraphQL tools more flexibility in how they respond to errors. Some may want to recreate the existing destructive behavior of GraphQL’s null bubbling, others may want to leverage their language’s native error handling mechanics, or even do something specific to their domain like Relay's use of React error boundaries.
 
 Because your client can decide how it handles errors, it will also be responsible for providing a modified version of the schema. For example, if the client raises an exception when an errored field is read, it can mark all "semantically non-null" fields as non-nullable in the schema provided to you as a frontend developer.
 
