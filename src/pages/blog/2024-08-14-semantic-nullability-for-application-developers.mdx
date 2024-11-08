@@ -73,7 +73,7 @@ type User {
 We can now trust that `age` and `posts` will never be null unless an error causes their values to fail to resolve.
 
 ### Frontend migration
-Client libraries that take advantage of the new features in this release may provide a flags to alter their error handling behavior. In this example, `ApolloClient` is providing a configuration option that causes the access of a field with an error to throw.
+Client libraries that take advantage of the new features in this release may provide flags to alter their error handling behavior. In this hypothetical example, `ApolloClient` is providing a configuration option that causes the access of a field with an error to throw.
 
 ```typescript
 const client = new ApolloClient({
