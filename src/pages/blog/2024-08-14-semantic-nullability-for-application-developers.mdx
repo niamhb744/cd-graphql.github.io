@@ -22,7 +22,7 @@ type User {
 }
 ```
 
-One thing to make clear: is this is not like using a type system in a compiled language (TS, Swift, Kotlin) where the type system makes compile-time guarantees about behavior at runtime. Rather you can think of GraphQL's type system as a "runtime" type system. You can trust that `age` will be an `Int`, because at runtime, GraphQL will assert that it is a `Int`, and throw an error if it is not. All types effectively represent a typecast, or a type assertion.
+One thing to make clear: this is not like using a type system in a compiled language (TS, Swift, Kotlin) where the type system makes compile-time guarantees about behavior at runtime. Rather you can think of GraphQL's type system as a "runtime" type system. You can trust that `age` will be an `Int`, because at runtime, GraphQL will assert that it is a `Int`, and throw an error if it is not. All types effectively represent a typecast, or a type assertion.
 
 This results in `null` having two different meanings in GraphQL.
 1. No value was provided. The `User` never provided an `age`.
