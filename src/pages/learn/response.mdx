@@ -27,10 +27,10 @@ The inclusion of the `data` key isn't an arbitrary decision made by the underlyi
 
 One thing that the GraphQL specification doesn't require is a specific serialization format for the response. That said, responses are typically formatted as JSON, as in the example above.
 
-Additionally, the GraphQL specification doesn't require the use of a particular transport protocol for requests either, although it is [common for HTTP to be used](/learn/serving-over-http/) with `POST` or `GET` methods for stateless query and mutations operations. Long-lived, stateful subscription operations are often supported by WebSockets or server-sent events instead.
+Additionally, the GraphQL specification doesn't require the use of a particular transport protocol for requests either, although it is [common for HTTP to be used](/learn/serving-over-http/) for stateless query and mutations operations. Long-lived, stateful subscription operations are often supported by WebSockets or server-sent events instead.
 
 <Callout type="info">
-There is [a draft GraphQL over HTTP specification](https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md) available with further guidelines for using HTTP with a GraphQL clients and servers.
+There is [a draft GraphQL over HTTP specification](https://graphql.github.io/graphql-over-http/draft/) available with further guidelines for using HTTP with GraphQL clients and servers.
 </Callout>
 
 ## Errors
@@ -51,7 +51,7 @@ operation {
 }
 ```
 
-The `message` key inside the `errors` object provides some helpful information for the developer to understand what kind of error was raised, and the `locations` key indicates where the error occurred in the document.
+The `message` key inside the `errors` object provides some helpful information for the developer to understand what kind of error was raised, and the `locations` key, if present, indicates where the error occurred in the document.
 
 Sometimes, a GraphQL request may be syntactically correct, but when the server parses and [validates](/learn/validation/) the document against the schema, it finds an issue with part of the operation and raises a _validation error_.
 
@@ -81,9 +81,9 @@ In the previous examples, we can see that when a request error occurs the `data`
 
 ### Field errors
 
-Field errors are raised if something unexpected happens when a resolver function is called. For example, a resolver may provide a null value for a field that has a Non-Null output type or there may be some other internal server error during execution.
+Field errors are raised if something unexpected happens during execution. For example, a resolver may raise an error directly, or may return invalid data such as a null value for a field that has a Non-Null output type.
 
-In these cases, the `data` key will be included in the result with the `errors` key because GraphQL will try to continue execution beyond the problematic field and potentially return a partial result.
+In these cases, GraphQL will attempt to continue executing the other fields and return a partial response, with the `data` key appearing alongside the `errors` key.
 
 Let's look at an example:
 
@@ -103,18 +103,19 @@ As with network calls to any type of API, network errors that are not specific t
 
 ## Extensions
 
-The final top-level key allowed by the GraphQL specification in a response is the `extentions` key. This key is reserved for GraphQL implementations to provide additional information about the response and there are no restrictions on what it may contain. 
+The final top-level key allowed by the GraphQL specification in a response is the `extentions` key. This key is reserved for GraphQL implementations to provide additional information about the response and though it must be an object if present, there are no other restrictions on what it may contain.
 
-For example, some GraphQL servers may include telemetry data or information about rate limit consumption under this key. Note that what data are available in `extensions` and whether this data is available in production or development environments will depend entirely on the specific GraphQL implementation.
+For example, some GraphQL servers may include telemetry data or information about rate limit consumption under this key. Note that what data is available in `extensions` and whether this data is available in production or development environments will depend entirely on the specific GraphQL implementation.
 
 ## Next steps
 
 To recap what we've learned about GraphQL response formats:
 
 - The GraphQL specification allows three top-level keys in a response: `data`, `errors`, and `extensions`
+- At least one of `data` or `errors` will be present on the response (when it contains both it is a "partial response")
 - The `data` key contains the result of the executed operation
 - Information about raised errors is included in the `errors` key of the response
-- Request errors (such as syntax or validation errors) are raised before execution begins so there won't be any data included in the response
+- Request errors (such as syntax or validation errors) are raised before execution begins so `data` won't be included in the response
 - When a field error occurs during execution, there will be a description of the issue in the `errors` key and there may be partial data included with the `data` key
 - GraphQL implementations may include additional arbitrary information about the response in the `extensions` key
 
