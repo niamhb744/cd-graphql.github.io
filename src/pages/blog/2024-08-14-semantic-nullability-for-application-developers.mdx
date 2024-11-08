@@ -9,6 +9,8 @@ byline: Alex Reilly
 
 > This blog post is directed at application developers using GraphQL. If you are a library author, you should read the more detailed feature spec instead.
 
+Today we're providing a progress update from the Nullablility Working Group on Semantic Nullability which is our new approach to fixing GraphQL's nullability issues.
+
 GraphQL has some fundamental problems, and to talk about them, we first have to talk about GraphQL's type system. GraphQL allows you to define a schema, and to do that many developers write a document in Schema Definition Language, or SDL. A SDL document may look like this
 
 ```graphql
@@ -42,17 +44,18 @@ The root of the problem is that developers want a way to express that all `User`
 
 This is what we're calling "Semantic non-null". The syntax we've chosen is the following
 
-| Syntax   | Meaning           |
-| -------- | ----------------- |
-| String   | Nullable          |
-| String!  | Semantic non-null |
-| String!! | Strict non-null   |
+| Syntax  | Meaning           |
+| ------- | ----------------- |
+| String? | Nullable          |
+| String  | Semantic non-null |
+| String! | Strict non-null   |
 
-`String` remains exactly the same in meaning, `String!` becomes `String!!`, and `String!` is the new type meaning `String` or `(Error, null)`. This is of course, a breaking change, and GraphQL prides itself in offering a path to non-breaking evolution for existing services. So alongside the new type, we're introducing some mechanics to assist developers to make incremental updates to their applications.
+Types are now semantic non-null by default. Question marks are used to indicate a nullable field similar to many other modern languages. `String!` retains its meaning. This is of course, a breaking change, and GraphQL prides itself in offering a path to non-breaking evolution for existing services. So alongside the new type, we're introducing some mechanics to assist developers in making incremental updates to their applications.
+
 ### Server migration
-In order to migrate, start by updating your service to use the most recent version of GraphQL.
+Once Semantic Nullability has been released, you will be able to start migrating by updating your service to use the most recent version of GraphQL.
 
-This will open up the option to begin evolving your schema document by document. You can place the document directive `@extendedNullability` at the top of a file to begin using the new type of nullability in that file. The directive will not impact the interpretation of any other files in your schema.
+This will open up the option to begin evolving your schema document by document. You can place the document directive `@SemanticNullability` at the top of a file to begin using the new nullability features in that file. The directive will not impact the interpretation of any other files in your schema.
 
 After migration, a `User` type would look like this.
 
@@ -60,16 +63,17 @@ After migration, a `User` type would look like this.
 @extendedNullability
 
 type User { 
-  id: ID!!
-  name: String!!
-  age: Int!
-  posts: [Post!]!
+  id: ID!
+  name: String!
+  age: Int
+  posts: [Post]
 }
 ```
 
 We can now trust that `age` and `posts` will never be null unless an error causes their values to fail to resolve.
+
 ### Frontend migration
-Client libraries and code generation tools that support Semantic Nullability may provide a flags to alter their error handling behavior. In this example, `ApolloClient` is providing a configuration option that causes the access of a field with an error to throw.
+Client libraries that take advantage of the new features in this release may provide a flags to alter their error handling behavior. In this example, `ApolloClient` is providing a configuration option that causes the access of a field with an error to throw.
 
 ```typescript
 const client = new ApolloClient({
@@ -82,7 +86,7 @@ Semantic Nullability gives clients and GraphQL tools more flexibility in how the
 
 Because your client can decide how it handles errors, it will also be responsible for providing a modified version of the schema. For example, if the client raises an exception when an errored field is read, it can mark all "semantically non-null" fields as non-nullable in the schema provided to you as a frontend developer.
 
-![Example code generation](https://i.imgur.com/VeblGEx.png)
+![Example code generation](https://i.imgur.com/i3hdCND.png)
 
 You should use the modified version of the schema when doing code generation for your frontend application.
 
