@@ -71,7 +71,9 @@ Even when [the N+1 problem](/learn/performance/#the-n1-problem) has been remedia
 
 For this reason, it's a good idea to limit the maximum depth of fields that a single operation can have. Many GraphQL implementations expose configuration options that allow you to specify a maximum depth for a GraphQL document and return an error to the client if a request exceeds this limit before execution begins.
 
-For cases where a client may have a legitimate use case for a deeply nested query and it's impractical to set a blanket limit on all queries, you may instead opt for applying depth limits specifically to list fields instead, or using [rate limiting](/#rate-limiting) instead.
+Since nesting list fields can result in exponential increases to the amount of data returned, it's recommended to apply a separate smaller limit to how deeply lists can be nested.
+
+For cases where a client may have a legitimate use case for a deeply nested query and it's impractical to set a low blanket limit on all queries, you may need to rely on techniques such as [rate limiting](/#rate-limiting) or [query complexity analysis](#query-complexity-analysis).
 
 ### Breadth and batch limiting
 
@@ -124,9 +126,11 @@ Depth, breadth, and batch limiting help prevent broad categories of malicious op
 
 Rate limiting may take place in different layers of an application, for example, in the network layer or the business logic layer. Because GraphQL allows clients to specify exactly what data they need in their queries, a server may not be able to know in advance if a request includes fields that will place a higher load on its resources during execution. As a result, applying useful rate limits for a GraphQL API typically requires a different approach than simply keeping track of the total number of incoming requests over a time period in the network layer; therefore applying rate limits within the business logic layer is generally recommended.
 
-_Query complexity analysis_ is one method that can be used to rate limit GraphQL requests by applying weights to the types and fields in a schema and then analyzing an incoming document to determine if the combination of fields included in its selection set exceeds a maximum allowable cost per request. If the request proceeds, the total cost of the request can be deducted from the overall query budget allocated for a specific period.
+### Query complexity analysis
 
-While the GraphQL specification doesn't provide any guidelines on implementing query complexity analysis or rate limits for an API, there is [a community-maintained draft specification]((https://ibm.github.io/graphql-specs/cost-spec.html)) for implementing custom type system directives that support these calculations.
+By applying weights to the types and fields in a schema, you can estimate the cost of incoming requests using the technique known as _query complexity analysis_. If the combination of fields included in a request exceeds a maximum allowable cost per request, you may choose to reject the request outright. The estimated cost can also be factored into rate limiting: if the request proceeds, the total cost of the request can be deducted from the overall query budget allocated to a client for a specific time period.
+
+While the GraphQL specification doesn't provide any guidelines on implementing query complexity analysis or rate limits for an API, there is [a community-maintained draft specification](https://ibm.github.io/graphql-specs/cost-spec.html) for implementing custom type system directives that support these calculations.
 
 ### Trusted documents
 
