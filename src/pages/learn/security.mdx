@@ -81,15 +81,12 @@ Consider what would happen during the execution of the following query operation
 
 ```graphql
 query {
-  hero1: hero(episode: NEWHOPE) {
-    name
-  }
-  hero2: hero(episode: EMPIRE) {
-    name
-  }
-  ### ...
-  hero100: hero(episode: JEDI) {
-    name
+  viewer {
+    friends1: friends(limit: 1) { name }
+    friends2: friends(limit: 2) { name }
+    friends3: friends(limit: 3) { name }
+    # ...
+    friends100: friends(limit: 100) { name }
   }
 }
 ```
@@ -125,7 +122,7 @@ As with depth limiting, a GraphQL implementation may have configuration options 
 
 Depth, breadth, and batch limiting help prevent broad categories of malicious operations such as cyclic queries and batching attacks, but they don't provide a way to declare that a particular field is computationally expensive to resolve. So for more advanced demand control requirements, you may wish to implement rate limiting. 
 
-Rate limiting may take place in different layers of an application, for example, in the network layer or the business logic layer. Because GraphQL allows clients to specify exactly what data they need in their queries, a server may not be able to know in advance if a request includes fields that will place a higher load on its resources during execution. As a result, applying useful rate limits for a GraphQL API typically requires a different approach than simply keeping track of the total number of incoming requests over a time period in the network layer.
+Rate limiting may take place in different layers of an application, for example, in the network layer or the business logic layer. Because GraphQL allows clients to specify exactly what data they need in their queries, a server may not be able to know in advance if a request includes fields that will place a higher load on its resources during execution. As a result, applying useful rate limits for a GraphQL API typically requires a different approach than simply keeping track of the total number of incoming requests over a time period in the network layer; therefore applying rate limits within the business logic layer is generally recommended.
 
 _Query complexity analysis_ is one method that can be used to rate limit GraphQL requests by applying weights to the types and fields in a schema and then analyzing an incoming document to determine if the combination of fields included in its selection set exceeds a maximum allowable cost per request. If the request proceeds, the total cost of the request can be deducted from the overall query budget allocated for a specific period.
 
@@ -135,9 +132,9 @@ While the GraphQL specification doesn't provide any guidelines on implementing q
 
 For GraphQL APIs that only serve first-party clients, using _trusted documents_ will allow you to create an allowlist of operations that can be executed against a schema.
 
-As a build step during development, clients may submit their GraphQL documents to the server's allowlist to be stored using the hashed document string as an ID. At runtime, the client can send the hashed document ID instead of the full GraphQL document, and the server will only execute the request for known document IDs.
+As a build step during development clients may submit their GraphQL documents to the server's allowlist, where each document is stored with a unique ID—usually its hash. At runtime, the client can send a document ID instead of the full GraphQL document, and the server will only execute requests for known document IDs.
 
-The GraphQL specification doesn't require the use of trusted documents or indicate how they should be implemented, but there are an increasing number of GraphQL implementations that support them.
+Trusted documents are simply _persisted documents_ that are deemed to not be malicious, usually because they were authored by your developers and approved through code review. Efforts are underway to [standardize _persisted documents_ as part of the GraphQL-over-HTTP specification](https://github.com/graphql/graphql-over-http/pull/264)—an increasing number of GraphQL clients and servers already support them (sometimes under their legacy misnomer: _persisted queries_).
 
 ## Schema considerations
 
@@ -166,7 +163,7 @@ The sanitization step should take place in the business logic layer that is call
 
 [Introspection](/learn/introspection/) is a powerful feature of GraphQL that allows you to query a GraphQL API for information about its schema. However, GraphQL APIs that only serve first-party clients may forbid introspection queries in non-development environments.
 
-Note that disabling introspection is a form of "security through obscurity" and will not be sufficient to protect a GraphQL API by itself, but it may be used as a part of a broader security strategy to limit the discoverability of API information from potential attackers. For more comprehensive protection of sensitive schema details and user data, trusted documents and authorization should be used.
+Note that disabling introspection can be used as a form of "security through obscurity," but will not be sufficient to entirely obscure a GraphQL API by itself. It may be used as a part of a broader security strategy to limit the discoverability of API information from potential attackers. For more comprehensive protection of sensitive schema details and user data, trusted documents and authorization should be used.
 
 ### Error messages
 
