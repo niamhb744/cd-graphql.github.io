@@ -184,6 +184,8 @@ query {
 
 These hints can be helpful when debugging client-side errors, but they may provide more information about a schema in a production environment than we would like to reveal. Hiding detailed error information in GraphQL responses outside of development environments is important because, even with introspection disabled, an attacker could ultimately infer the shape of an entire schema by running numerous operations with incorrect field names.
 
+In addition to request errors, details about errors that are raised during field execution should be masked as they may reveal sensitive information about the server or underlying data sources.
+
 ## Authentication and authorization
 
 Auth-related considerations for GraphQL APIs are discussed in-depth on the [Authorization page](/learn/authorization/).
