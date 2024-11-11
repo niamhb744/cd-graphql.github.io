@@ -18,7 +18,7 @@ On this page, you'll learn how to use mutation operations to create, update, and
 All of the features of GraphQL operations that apply to queries also apply to mutations, so review the [Queries](/learn/queries/) page first before proceeding.
 </Callout>
 
-## Creating data
+## Add new data
 
 When creating new data with a REST API, you would send a `POST` request to a specific endpoint and include information about the entities to be created in the body of the request. GraphQL takes a different approach.
 
@@ -73,7 +73,7 @@ Mutation: {
 
 You can learn more about GraphQL provides data for fields on the [Execution page](/learn/execution).
 
-## Updating data
+## Update existing data
 
 Similarly, we use mutations to update existing data. To change a human's name, we'll define a new mutation field and set that field's output type to the `Human` type so we can return the updated human's information to client after the server successfully writes the data:
 
@@ -101,7 +101,7 @@ Purpose-built mutation fields can help make a schema more expressive by allowing
 
 Schemas should be designed to help clients get the data that they need from the GraphQL API, so the fields defined in a schema should be informed by those use cases.
 
-## Deleting data
+## Remove existing data
 
 Just as we can send a `DELETE` request to delete a resource with a REST API, we can use mutations to delete some existing data as well by defining another field on the `Mutation` type:
 
