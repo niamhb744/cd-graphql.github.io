@@ -20,5 +20,5 @@ export default {
   pagination: "",
   "global-object-identification": "",
   caching: "",
-  "federation": "", 
+  federation: "",
 }
