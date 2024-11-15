@@ -67,46 +67,49 @@ The federation process involves several key components:
 
 <Tabs items={['Products subgraph', 'Orders subgraph', 'Users subgraph']}>
 <Tabs.Tab>
+
 ```graphql
-    type Product @key(fields: "id") {
-      id: ID!
-      title: String!
-      price: Float!
-      inStock: Boolean!
-    }
-    ```
+type Product @key(fields: "id") {
+  id: ID!
+  title: String!
+  price: Float!
+  inStock: Boolean!
+}
+```
+
 </Tabs.Tab>
 <Tabs.Tab>
+
 ```graphql
 type Order @key(fields: "id") {
-id: ID!
-products: [Product!]!
-total: Float!
+  id: ID!
+  products: [Product!]!
+  total: Float!
 }
 
-    type Product {
-      id: ID!
-    }
-    ```
+type Product {
+  id: ID!
+}
+```
 
 </Tabs.Tab>
 <Tabs.Tab>
 ```graphql
 type Query {
-user(id: ID!): User
+  user(id: ID!): User
 }
 
-    type User {
-      id: ID!
-      name: String!
-      email: String
-      orders: [Order!]!
-    }
+type User {
+  id: ID!
+  name: String!
+  email: String
+  orders: [Order!]!
+}
 
-    type Order {
-      id: ID!
-    }
-    ```
+type Order {
+  id: ID!
+}
+```
 
 </Tabs.Tab>
 </Tabs>
@@ -156,16 +159,16 @@ often provides caching and performance optimizations.
 
 ```mermaid
 graph TD
-    Client --> FederationGateway
-    FederationGateway --> UserService
-    FederationGateway --> OrderService
-    FederationGateway --> ProductService
+  Client --> FederationGateway
+  FederationGateway --> UsersService
+  FederationGateway --> OrdersService
+  FederationGateway --> ProductsService
 
-    Client[Client]
-    FederationGateway[Gateway]
-    UserService[User Service]
-    OrderService[Order Service]
-    ProductService[Product Service]
+  Client[Client]
+  FederationGateway[Gateway]
+  UsersService[Users Service]
+  OrdersService[Orders Service]
+  ProductsService[Products Service]
 ```
 
 Take the following query as an example:
