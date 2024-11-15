@@ -10,6 +10,7 @@ export default {
   subscriptions: "",
   validation: "",
   execution: "",
+  response: "",
   introspection: "",
   "-- 2": {
     type: "separator",
