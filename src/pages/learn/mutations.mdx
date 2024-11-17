@@ -6,7 +6,11 @@ import { Callout } from "nextra/components"
 
 Most discussions of GraphQL focus on data fetching, but any complete data platform needs a way to modify server-side data as well.
 
-In REST, any request might cause some side-effects on the server, but by convention, it's suggested that one doesn't use `GET` requests to modify data. GraphQL is similar—technically any query could be implemented to cause a data write. However, it's useful to establish a convention that any operations that cause writes should be sent explicitly via a mutation.
+In REST, any request might cause some side-effects on the server, but by convention, it's suggested that one doesn't use `GET` requests to modify data. GraphQL is similar—technically any field resolver could be implemented to cause a data write—but the [GraphQL specification states](https://spec.graphql.org/draft/#sel-GANRNDAB6DBmMn6D):
+
+> the resolution of fields other than top-level mutation fields must always be side effect-free and idempotent
+
+Thus only the top-level fields in mutation operations are allowed to cause side effects; to do otherwise would make your schema GraphQL non-compliant.
 
 On this page, you'll learn how to use mutation operations to create, update, and delete data using GraphQL.
 
