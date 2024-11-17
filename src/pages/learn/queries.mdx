@@ -31,7 +31,7 @@ When creating a GraphQL _document_ we always start with a [root operation type](
 
 The GraphQL specification indicates that a request's result will be returned on a top-level `data` key in the response. If the request raised any errors, there will be information about what went wrong on a top-level `errors` key. From there, you can see that the result has the same shape as the query. This is essential to GraphQL, because you always get back what you expect, and the server knows exactly what fields the client is asking for.
 
-In the previous example, we just asked for the name of our hero which returned a `String`, but fields can also refer to more deeply nested Object types. In that case, you can make a _sub-selection_ of fields for that object:
+In the previous example, we just asked for the name of our hero which returned a `String`, but fields can also return Object types (and lists thereof). In that case, you can make a _sub-selection_ of fields for that Object type:
 
 ```graphql
 # { "graphiql": true }
