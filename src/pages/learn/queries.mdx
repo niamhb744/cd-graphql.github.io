@@ -8,7 +8,7 @@ GraphQL supports three main operation types—queries, mutations, and subscripti
 
 ## Fields
 
-At its simplest, GraphQL is about asking for specific [fields](https://spec.graphql.org/draft/#sec-Language.Fields) on objects. Let's start by looking at a simple query for a `hero` field that's defined on the `Query` type in the schema:
+At its simplest, GraphQL is about asking for specific [fields](https://spec.graphql.org/draft/#sec-Language.Fields) on objects. Let's start by looking at the `hero` field that's defined on the `Query` type in the schema:
 
 ```graphql
 type Query {
@@ -16,7 +16,7 @@ type Query {
 }
 ```
 
-We can see what the result we get when we run it:
+We can see what result we get when we query it:
 
 ```graphql
 # { "graphiql": true }
@@ -27,7 +27,7 @@ We can see what the result we get when we run it:
 }
 ```
 
-When creating a GraphQL _document_ we always start with a [root operation type](/learn/schema/#the-query-mutation-and-subscription-types) (the `Query` Object type for this example) because it serves as an entry point to the API. From there we must specify the _selection set_ of fields all the way down to their leaf values, which will be Scalar or Enum types. The field `name` returns a `String` type, in this case the name of the main hero of Star Wars, `"R2-D2"`.
+When creating a GraphQL _document_ we always start with a [root operation type](/learn/schema/#the-query-mutation-and-subscription-types) (the `Query` Object type for this example) because it serves as an entry point to the API. From there we must specify the _selection set_ of fields we are interested in, all the way down to their leaf values which will be Scalar or Enum types. The field `name` returns a `String` type, in this case the name of the main hero of Star Wars, `"R2-D2"`.
 
 The GraphQL specification indicates that a request's result will be returned on a top-level `data` key in the response. If the request raised any errors, there will be information about what went wrong on a top-level `errors` key. From there, you can see that the result has the same shape as the query. This is essential to GraphQL, because you always get back what you expect, and the server knows exactly what fields the client is asking for.
 
@@ -73,7 +73,7 @@ The client must then provide the required `id` value with the query:
 
 In a system like REST, you can only pass a single set of arguments—the query parameters and URL segments in your request. But in GraphQL, every field and nested object can get its own set of arguments, making GraphQL a complete replacement for making multiple API fetches. 
 
-You can even pass arguments into fields that output Scalar types, to implement data transformations once on the server, instead of on every client separately:
+You can even pass arguments into fields that output Scalar types; one use case for this would be to implement data transformations once on the server, instead of on every client separately:
 
 ```graphql
 # { "graphiql": true }
@@ -91,7 +91,7 @@ Arguments can be of many different types. In the above example, we have used an 
 
 ## Operation type and name
 
-In the examples above we have been using a shorthand syntax where we omit the `query` keyword before the operation's selection set. In addition to specifying the _operation type_ explicitly, we can also add a unique _operation name_, which is useful in production apps because it makes our code less ambiguous.
+In the examples above we have been using a shorthand syntax where we omit the `query` keyword before the operation's selection set. In addition to specifying the _operation type_ explicitly, we can also add a unique _operation name_, which is useful in production apps because it makes debugging and tracing easier.
 
 Here’s an example that includes the `query` keyword as the operation type and `HeroNameAndFriends` as the operation name:
 
@@ -107,9 +107,9 @@ query HeroNameAndFriends {
 }
 ```
 
-The operation type is either `query`, `mutation`, or `subscription` and describes what type of operation you intend to do. This keyword is required unless you're using the shorthand syntax for queries, and it is always required for mutations and subscriptions. Additionally, if you wish to provide a name for your operation, then you must specify the operation type as well.
+The operation type is either `query`, `mutation`, or `subscription` and describes what type of operation you intend to do. This keyword is required unless you're using the shorthand syntax for queries (it is always required for mutations and subscriptions). Additionally, if you wish to provide a name for your operation, then you must specify the operation type as well.
 
-The operation name is a meaningful and explicit name for your operation. It is only required when sending multiple operations in one document, but it's encouraged because operation names are helpful for debugging and server-side logging. When something goes wrong (you see errors either in your network logs or in the logs of your GraphQL server) it is easier to identify a query in your codebase by name instead of trying to decipher the contents.
+The operation name is an explicit name that you assign to your operation; you should pick a meaningful name. It is required when sending multiple operations in one document, but even if you're only sending one operation it's encouraged because operation names are helpful for debugging and server-side logging. When something goes wrong (you see errors either in your network logs or in the logs of your GraphQL server) it is easier to identify a query in your codebase by name instead of trying to decipher the contents.
 
 Think of this just like a function name in your favorite programming language. For example, in JavaScript, we can easily work only with anonymous functions, but when we give a function a name, it's easier to track it down, debug our code, and log when it's called. In the same way, GraphQL query and mutation names, along with fragment names, can be a useful debugging tool on the server side to identify different GraphQL requests.
 
@@ -192,7 +192,7 @@ When default values are provided for all variables, you can call the query witho
 
 ## Fragments
 
-Let's say we have a relatively complicated page in our app, which lets us look at two heroes side by side, along with their friends. You can imagine that such a query could quickly get complicated because we would need to repeat the fields at least once —one for each side of the comparison.
+Let's say we have a relatively complicated page in our app, which lets us look at two heroes side by side, along with their friends. You can imagine that such a query could quickly get complicated because we would need to repeat the fields at least once—one for each side of the comparison.
 
 That's why GraphQL includes reusable units called [fragments](https://spec.graphql.org/draft/#sec-Language.Fragments). Fragments let you construct sets of fields, and then include them in queries where needed. Here's an example of how you could solve the above situation using fragments:
 
@@ -216,7 +216,7 @@ fragment comparisonFields on Character {
 }
 ```
 
-You can see how the above query would be pretty repetitive if the fields were repeated. The concept of fragments is frequently used to split complicated application data requirements into smaller chunks, especially when you need to combine many UI components with different fragments into one initial data fetch.
+You can see how the above query would be pretty repetitive if we weren't able to use fragments. The concept of fragments is frequently used to split complicated application data requirements into smaller chunks, especially when you need to combine many UI components with different fragments into one initial data fetch.
 
 ### Using variables inside fragments
 
@@ -299,7 +299,7 @@ GraphQL allows you to request `__typename`, a meta field, at any point in a quer
 
 In the above query, `search` returns a Union type that can be one of three options. Without the `__typename` field, it would be impossible for a client to tell the different types apart.
 
-GraphQL services provide a few more meta fields, the rest of which are used to expose the [introspection](/learn/introspection) system.
+All field names beginning with two underscores (`__`) are reserved by GraphQL. In addition to `__typename`, GraphQL services provide the `__schema` and `__type` meta-fields which expose the [introspection](/learn/introspection) system.
 
 ## Directives
 
@@ -340,11 +340,11 @@ To recap what we've learned about queries:
 - Fields can accept arguments that alter the output of that field
 - Operations can use the `query`, `mutation`, or `subscription` keyword to indicate their type 
 - The operation type keyword can be omitted for certain query operations only
-- Operations can be given unique names, which can make code more expressive and help with debugging
+- Operations should be given unique names, which make requests more expressive and help with debugging
 - Field aliases allow you to rename response keys, include the same field multiple times in the same query, and provide different arguments to the aliased fields
 - Variables are preceded by the `$` character and can be used to provide dynamic values to field arguments
 - A fragment is a reusable selection set of fields that can be used as needed in multiple queries
 - Executable directive can be applied to queries to change the result of a GraphQL query when it's executed on the server
 - All spec-compliant GraphQL servers include the `@include` and `@skip` built-in directives
 
-Not that we understand ins and outs of how to read data from a GraphQL server with query operations, so it's time to learn how to write data as well using [mutations](/learn/mutations/).
+Now that we understand the ins and outs of how to read data from a GraphQL server with query operations, it's time to learn how to change data and trigger side effects using [mutations](/learn/mutations/).
