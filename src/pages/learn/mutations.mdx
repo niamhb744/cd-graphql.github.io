@@ -6,13 +6,9 @@ import { Callout } from "nextra/components"
 
 Most discussions of GraphQL focus on data fetching, but any complete data platform needs a way to modify server-side data as well.
 
-In REST, any request might cause some side-effects on the server, but by convention, it's suggested that one doesn't use `GET` requests to modify data. GraphQL is similar—technically any field resolver could be implemented to cause a data write—but the [GraphQL specification states](https://spec.graphql.org/draft/#sel-GANRNDAB6DBmMn6D):
+In REST, any request might cause some side-effects on the server, but by convention, it's suggested that one doesn't use `GET` requests to modify data. GraphQL is similar—technically any field resolver could be implemented to cause a data write—but the [GraphQL specification states](https://spec.graphql.org/draft/#sel-GANRNDAB6DBmMn6D) that "the resolution of fields other than top-level mutation fields must always be side effect-free and idempotent." Thus, for any spec-compliant GraphQL schemas, only the top-level fields in mutation operations are allowed to cause side effects.
 
-> the resolution of fields other than top-level mutation fields must always be side effect-free and idempotent
-
-Thus only the top-level fields in mutation operations are allowed to cause side effects; to do otherwise would make your schema GraphQL non-compliant.
-
-On this page, you'll learn how to use mutation operations to create, update, and delete data using GraphQL.
+On this page, you'll learn how to use mutation operations to write data using GraphQL, and do so in a way that supports client use cases.
 
 <Callout type="info">
 All of the features of GraphQL operations that apply to queries also apply to mutations, so review the [Queries](/learn/queries/) page first before proceeding.
@@ -99,7 +95,19 @@ This example demonstrates an important distinction from REST. To update a human'
 
 Purpose-built mutation fields can help make a schema more expressive by allowing the input types for field arguments to be Non-Null types (a generic `updateHuman` mutation would likely need to accept many nullable arguments to handle different update scenarios). Defining this requirement in the schema also eliminates the need for other runtime logic to determine that the appropriate values were submitted to perform the client's desired write operation.
 
-Schemas should be designed to help clients get the data that they need from the GraphQL API, so the fields defined in a schema should be informed by those use cases.
+GraphQL also allows us to express relationships between data that would be more difficult to model semantically with a basic CRUD-style request. For example, a user may wish to save a personal rating for a film. While the rating belongs to the user and doesn't modify anything related to a film itself, we can ergonomically associate it with a `Film` object as follows:
+
+```graphql
+# { "graphiql": true, "variables": { "episode": "EMPIRE", "rating": "THUMBS_UP" } }
+mutation RateFilm($episode: Episode!, $rating: FilmRating!) { 
+  rateFilm(episode: $episode, rating: $rating) {
+    episode
+    viewerRating
+  }
+}
+```
+
+As a general rule, schemas should be designed to help clients get the data that they need from the GraphQL API, so the fields defined in a schema should be informed by those use cases.
 
 ## Remove existing data
 
