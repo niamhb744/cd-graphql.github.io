@@ -89,7 +89,7 @@ query HeroWithFriends {
 
 This is known as the N+1 problem, where the first request to an underlying data source leads to N subsequent requests to resolve the data for all of the requested fields.
 
-This is commonly solved by a batching technique, where multiple requests for data from a backend are collected over a short period and then dispatched in a single request to an underlying database or microservice by using a tool like Facebook's [DataLoader](https://github.com/facebook/dataloader).
+This is commonly solved by a batching technique, where multiple requests for data from a backend are collected over a short period and then dispatched in a single request to an underlying database or microservice by using a tool like Facebook's [DataLoader](https://github.com/facebook/dataloader). Additionally, certain GraphQL implementations may have built-in capabilities that allow you to translate operation selection sets into optimized queries to underlying data sources.
 
 ## Demand control
 
