@@ -16,6 +16,16 @@ The same security measures that would be used for any type of API served with a 
 
 ## Demand control
 
+### Trusted documents
+
+For GraphQL APIs that only serve first-party clients, you can write operations as needed in development environments and then lock those operations so that only they may be sent by front-end apps in production. Specifically, using _trusted documents_ will allow you to create an allowlist of operations that can be executed against a schema.
+
+As a build step during development clients may submit their GraphQL documents to the server's allowlist, where each document is stored with a unique ID—usually its hash. At runtime, the client can send a document ID instead of the full GraphQL document, and the server will only execute requests for known document IDs.
+
+Trusted documents are simply _persisted documents_ that are deemed to not be malicious, usually because they were authored by your developers and approved through code review. Efforts are underway to [standardize _persisted documents_ as part of the GraphQL-over-HTTP specification](https://github.com/graphql/graphql-over-http/pull/264)—an increasing number of GraphQL clients and servers already support them (sometimes under their legacy misnomer: _persisted queries_).
+
+Keep in mind that trusted documents can't be used for public APIs because the operations sent by third-party clients won't known in advance. However, the other recommendations that follow can help defend a public GraphQL API from malicious operations.
+
 ### Paginated fields
 
 A first step toward implementing demand control for a GraphQL API is limiting the amount of data that can be queried from a single field. When a field outputs a List type and the resulting list could potentially return a lot of data, it should be paginated to limit the maximum number of items that may be returned in a single request.
@@ -132,14 +142,6 @@ By applying weights to the types and fields in a schema, you can estimate the co
 
 While the GraphQL specification doesn't provide any guidelines on implementing query complexity analysis or rate limits for an API, there is [a community-maintained draft specification](https://ibm.github.io/graphql-specs/cost-spec.html) for implementing custom type system directives that support these calculations.
 
-### Trusted documents
-
-For GraphQL APIs that only serve first-party clients, using _trusted documents_ will allow you to create an allowlist of operations that can be executed against a schema.
-
-As a build step during development clients may submit their GraphQL documents to the server's allowlist, where each document is stored with a unique ID—usually its hash. At runtime, the client can send a document ID instead of the full GraphQL document, and the server will only execute requests for known document IDs.
-
-Trusted documents are simply _persisted documents_ that are deemed to not be malicious, usually because they were authored by your developers and approved through code review. Efforts are underway to [standardize _persisted documents_ as part of the GraphQL-over-HTTP specification](https://github.com/graphql/graphql-over-http/pull/264)—an increasing number of GraphQL clients and servers already support them (sometimes under their legacy misnomer: _persisted queries_).
-
 ## Schema considerations
 
 ### Validating and sanitizing argument values
@@ -195,6 +197,6 @@ Auth-related considerations for GraphQL APIs are discussed in-depth on the [Auth
 To recap these recommendations for securing a GraphQL API:
 
 - General security considerations for a chosen transport protocol will usually apply to a GraphQL API as well
-- Depending on your requirements, demand control can be implemented in many ways in GraphQL, including pagination of list fields, depth limiting, breadth/batch limiting, rate limiting, and using trusted documents
+- Depending on your requirements, demand control can be implemented in many ways in GraphQL, including trusted documents, pagination of list fields, depth limiting, breadth/batch limiting, and rate limiting
 - A GraphQL schema can help support validation and sanitization of client-provided values
 - Disabling introspection and obscuring error information can make an API's schema less discoverable, but they will typically not be sufficient when used on their own (a document allowlist is likely to be a more effective solution)
