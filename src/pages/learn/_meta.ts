@@ -20,5 +20,5 @@ export default {
   authorization: "",
   pagination: "",
   "global-object-identification": "",
-  caching: "",
+  performance: "",
 }
