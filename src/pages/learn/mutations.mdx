@@ -39,7 +39,7 @@ type Mutation {
 
 Like queries, mutation fields are added to one of the [root operation types](https://spec.graphql.org/draft/#sec-Root-Operation-Types) that provide an entry point to the API. In this case, we define the `createReview` field on the `Mutation` type. 
 
-Mutation fields can also accept arguments and you might notice that the `review` argument has an input type set to `ReviewInput`. This is known as [Input Object type](/learn/schema/#input-object-types), which allows us to pass in a whole object to be created instead of individual scalar values only.
+Mutation fields can also accept arguments and you might notice that the `review` argument has an input type set to `ReviewInput`. This is known as [Input Object type](/learn/schema/#input-object-types), which allows us to pass in a structured object containing information the mutation can use instead of individual scalar values only.
 
 Also like just like queries, if the mutation field returns an Object type, then you specify a selection set of its fields in the operation:
 
@@ -53,7 +53,7 @@ mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
 }
 ```
 
-While the `createReview` field could be defined with any valid output type in the schema, it's conventional to specify an output type that corresponds to whatever is modified during the mutation—in this case, the `Review` type. This can be useful for clients that need to fetch the new state of an object after an update.
+While the `createReview` field could be defined with any valid output type in the schema, it's conventional to specify an output type that relates to whatever is modified during the mutation—in this case, the `Review` type. This can be useful for clients that need to fetch the new state of an object after an update.
 
 Recall that GraphQL is meant to work with your existing code and data, so the actual creation of the review is up to you when clients send this operation to the GraphQL server. A hypothetical function that writes the new review to a database during a `createReview` mutation might look like this:
 
@@ -67,7 +67,7 @@ Mutation: {
 }
 ```
 
-You can learn more about GraphQL provides data for fields on the [Execution page](/learn/execution).
+You can learn more about how GraphQL provides data for fields on the [Execution page](/learn/execution).
 
 ## Update existing data
 
@@ -91,7 +91,7 @@ mutation UpdateHumanName($id: ID!, $name: String!) {
 }
 ```
 
-This example demonstrates an important distinction from REST. To update a human's properties using a REST API, you would likely send any updated data to a generalized endpoint for that resource using a `PATCH` request. With GraphQL, instead of simply creating an `updateHuman` mutation, you can define more specific mutation fields such as `updateHumanName`that are designed for the task at hand.
+This example demonstrates an important distinction from REST. To update a human's properties using a REST API, you would likely send any updated data to a generalized endpoint for that resource using a `PATCH` request. With GraphQL, instead of creating a generic `updateHuman` mutation, you may choose to define more specific mutation fields such as `updateHumanName` that are designed for the task at hand.
 
 Purpose-built mutation fields can help make a schema more expressive by allowing the input types for field arguments to be Non-Null types (a generic `updateHuman` mutation would likely need to accept many nullable arguments to handle different update scenarios). Defining this requirement in the schema also eliminates the need for other runtime logic to determine that the appropriate values were submitted to perform the client's desired write operation.
 
