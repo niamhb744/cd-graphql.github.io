@@ -111,11 +111,6 @@
       "permanent": true
     },
     {
-      "source": "/learn/caching/",
-      "destination": "/learn/performance/",
-      "permanent": true
-    },
-    {
       "source": "/docs/videos",
       "destination": "/community/#videos/",
       "permanent": true
