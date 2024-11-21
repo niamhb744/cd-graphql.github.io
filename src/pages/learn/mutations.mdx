@@ -91,7 +91,9 @@ mutation UpdateHumanName($id: ID!, $name: String!) {
 }
 ```
 
-This example demonstrates an important distinction from REST. To update a human's properties using a REST API, you would likely send any updated data to a generalized endpoint for that resource using a `PATCH` request. With GraphQL, instead of creating a generic `updateHuman` mutation, you may choose to define more specific mutation fields such as `updateHumanName` that are designed for the task at hand.
+## Purpose-built mutations
+
+The previous example demonstrates an important distinction from REST. To update a human's properties using a REST API, you would likely send any updated data to a generalized endpoint for that resource using a `PATCH` request. With GraphQL, instead of simply creating an `updateHuman` mutation, you can define more specific mutation fields such as `updateHumanName`that are designed for the task at hand.
 
 Purpose-built mutation fields can help make a schema more expressive by allowing the input types for field arguments to be Non-Null types (a generic `updateHuman` mutation would likely need to accept many nullable arguments to handle different update scenarios). Defining this requirement in the schema also eliminates the need for other runtime logic to determine that the appropriate values were submitted to perform the client's desired write operation.
 
@@ -107,7 +109,7 @@ mutation RateFilm($episode: Episode!, $rating: FilmRating!) {
 }
 ```
 
-As a general rule, schemas should be designed to help clients get the data that they need from the GraphQL API, so the fields defined in a schema should be informed by those use cases.
+As a general rule, a GraphQL API should be designed to help clients get and modify data in a way that makes sense for them, so the fields defined in a schema should be informed by those use cases.
 
 ## Remove existing data
 
