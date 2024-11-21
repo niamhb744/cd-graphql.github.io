@@ -19,10 +19,10 @@ You can find more discussions on the [#website channel on the GraphQL Slack](htt
 
 - a complete and understandable description of the data in your API,
 - support for powerful developer tooling, and
--  precise querying, which offers several benefits:
-  - clients request only the data they need, improving efficiency;
-  - new fields and features can be added without impacting existing clients; and
-  - field-level usage can be tracked and monitored for insights and optimization.
+- precise querying, which offers several benefits:
+- clients request only the data they need, improving efficiency;
+- new fields and features can be added without impacting existing clients; and
+- field-level usage can be tracked and monitored for insights and optimization.
 
 The [GraphQL Specification](https://spec.graphql.org/) is open source and governed by the [GraphQL Foundation](https://foundation.graphql.org/).
 
