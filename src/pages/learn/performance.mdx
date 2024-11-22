@@ -14,7 +14,7 @@ There is a range of client-side caching strategies that GraphQL clients may impl
 
 ## `GET` requests for queries
 
-GraphQL implementations that adhere to the [GraphQL over HTTP specification](https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md) will support the `POST` HTTP method by default, but may also support `GET` requests for query operations.
+GraphQL implementations that adhere to the [GraphQL over HTTP specification](https://graphql.github.io/graphql-over-http/draft/) will support the `POST` HTTP method by default, but may also support `GET` requests for query operations.
 
 Using `GET` can improve query performance because requests made with this HTTP method are typically considered cacheable by default and can help facilitate HTTP caching or the use of a content delivery network (CDN) when caching-related headers are provided in the server response. 
 
