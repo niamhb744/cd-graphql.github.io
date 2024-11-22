@@ -8,6 +8,10 @@ In practice, however, GraphQL is as cacheable as any API that enables parameteri
 
 On this page, we'll explore several different tactics that can be leveraged in GraphQL clients and servers to optimize how data is fetched from the API.
 
+## Client-side caching
+
+There is a range of client-side caching strategies that GraphQL clients may implement to help not only with performance but also to ensure that you render a consistent and responsive interface to your users. [Read more about client-side caching](/learn/caching).
+
 ## `GET` requests for queries
 
 GraphQL implementations that adhere to the [GraphQL over HTTP specification](https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md) will support the `POST` HTTP method by default, but may also support `GET` requests for query operations.
@@ -50,7 +54,7 @@ Certain demand control mechanisms can help guard a GraphQL API against these ope
 
 ## JSON (with GZIP)
 
-GraphQL services typically respond using JSON even though the GraphQL spec [does not require it](http://spec.graphql.org/draft/#sec-Serialization-Format). JSON may seem like an odd choice for an API layer promising better network performance, however, because it is mostly text it compresses exceptionally well with GZIP.
+GraphQL services typically respond using JSON even though the GraphQL spec [does not require it](http://spec.graphql.org/draft/#sec-Serialization-Format). JSON may seem like an odd choice for an API layer promising better network performance, however, because it is mostly text it compresses exceptionally well with algorithms such as GZIP, deflate and brotli.
 
 It's encouraged that any production GraphQL services enable GZIP and encourage their clients to send the header:
 
