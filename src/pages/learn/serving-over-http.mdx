@@ -6,7 +6,7 @@ import { Callout } from "nextra/components"
 
 The GraphQL specification doesn't require paricular client-server protocols when sending API requests and responses, but HTTP is the most common choice because of its ubiquity. On this page, we'll review some key guidelines to follow when setting up a GraphQL server to operate over HTTP.
 
-Note that the guidelines that follow only apply to stateless query and mutation operations.
+Note that the guidelines that follow only apply to stateless query and mutation operations. Visit the [Subscriptions page](/learn/subscriptions) for more information on transport protocols that commonly support these requests.
 
 <Callout type="info">
 The recommendations on this page align with the detailed [GraphQL-over-HTTP specification](https://graphql.github.io/graphql-over-http/draft/) currently in development. Though not yet finalized, this draft specification acts as a single source of truth for GraphQL client and library maintainers, detailing how to expose and consume a GraphQL API using an HTTP transport. Unlike the language specification, adherence is not mandatory, but most implementations are moving towards these standards to maximize interoperability.
