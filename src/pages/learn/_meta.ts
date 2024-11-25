@@ -24,4 +24,5 @@ export default {
   "global-object-identification": "",
   caching: "",
   security: "",
+  federation: "",
 }
