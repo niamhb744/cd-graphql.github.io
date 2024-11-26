@@ -529,27 +529,26 @@ function onHasCompletion(cm, data, onHintInformationRender) {
       // removed from our wrapper and in turn remove the wrapper from the
       // original container.
       let onRemoveFn
-      const observer = new MutationObserver((mutationsList) => {
+      const observer = new MutationObserver(mutationsList => {
         for (const mutation of mutationsList) {
           // Check if the hintsUl element was removed
           if (mutation.removedNodes) {
-            mutation.removedNodes.forEach((node) => {
-              if (node === hintsUl) {                
+            mutation.removedNodes.forEach(node => {
+              if (node === hintsUl) {
                 // Cleanup logic
-                observer.disconnect(); // Stop observing
-                wrapper.parentNode.removeChild(wrapper);
-                wrapper = null;
-                information = null;
-                onRemoveFn = null;
+                observer.disconnect() // Stop observing
+                wrapper.parentNode.removeChild(wrapper)
+                wrapper = null
+                information = null
+                onRemoveFn = null
               }
-            });
+            })
           }
         }
-      });
-      
+      })
+
       // Start observing the wrapper for child node removals
-      observer.observe(wrapper, { childList: true, subtree: false });
-      
+      observer.observe(wrapper, { childList: true, subtree: false })
     }
 
     // Now that the UI has been set up, add info to information.
